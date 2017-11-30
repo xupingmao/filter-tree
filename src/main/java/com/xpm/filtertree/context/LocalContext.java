@@ -12,11 +12,6 @@ import java.util.Set;
  */
 public class LocalContext {
 
-    // 默认有结果，如果没有结果，不会被传递到下一个Context
-    private boolean hasResult = true;
-    // filter处理的结果集
-    private Set<String> idSet;
-
     // 同层上一个的filter处理结果，由框架(MatchAll)传递
     private LocalContext prevResult;
 
@@ -26,13 +21,6 @@ public class LocalContext {
     // 扩展调试信息
     private StringBuilder message;
 
-    public boolean hasResult() {
-        return hasResult;
-    }
-
-    public void setHasResult(boolean hasResult) {
-        this.hasResult = hasResult;
-    }
 
     public String getName() {
         return name;
@@ -41,32 +29,6 @@ public class LocalContext {
     public void setName(String name) {
         this.name = name;
     }
-
-    public Set<String> getIdSet() {
-        if (idSet == null) {
-            idSet = Sets.newLinkedHashSet();
-        }
-        return idSet;
-    }
-
-    public void setIdSet(Set<String> idSet) {
-        this.idSet = idSet;
-    }
-
-    /**
-     * 获得一份上一个节点的结果拷贝
-     * @return
-     */
-    public Set<String> getPrevIdSetCopy(){
-        if (prevResult == null) {
-            return Sets.newLinkedHashSet();
-        }
-        if (prevResult.getIdSet() == null) {
-            return Sets.newLinkedHashSet();
-        }
-        return Sets.newLinkedHashSet(prevResult.getIdSet());
-    }
-
 
     public void setPrevResult(LocalContext prevResult) {
         this.prevResult = prevResult;
@@ -103,13 +65,6 @@ public class LocalContext {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         sb.append("idSetSize=");
-        sb.append(getIdSet().size());
-
-        if (getIdSet().size() < 10) {
-            sb.append(",");
-            sb.append("idSet=");
-            sb.append(getIdSet());
-        }
 
         if (message != null) {
             sb.append(",");

@@ -2,7 +2,7 @@ package com.xpm.filtertree;
 
 import com.xpm.filtertree.context.GlobalContext;
 import com.xpm.filtertree.context.LocalContext;
-import com.xpm.filtertree.exception.FilterBaseException;
+import com.xpm.filtertree.exception.RuleBaseException;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import java.util.List;
  *
  * Created by xupingmao on 2017/3/28.
  */
-public interface Filter {
+public interface Rule {
 
     /**
      * Filter必须定义名称，方便记录日志，排除问题
@@ -43,16 +43,23 @@ public interface Filter {
      *
      * @return
      */
-    List<Filter> getChildren();
+    List<Rule> getChildren();
 
     /**
-     *
+     * 规则的条件，也就是前件
+     * @param globalContext
+     * @return
+     */
+    boolean when(GlobalContext globalContext);
+
+    /**
+     * 规则的结果，后件
      * @param globalContext 全局上下文
      * @param localContext 每个处理器独立的上下文,每次调用的时候new一个
      *              比如说下一个处理器依赖上一个处理器的执行结果,那么结果应该放在param而不是context里面
-     *        localContext是一个链表，可以关联到前面执行过的所有的有效filter局部上下文
+     *        localContext是一个链表，可以关联到前面执行过的所有的有效rule局部上下文
      * @return
      */
-    void doFilter(GlobalContext globalContext, LocalContext localContext) throws FilterBaseException;
+    void execute(GlobalContext globalContext, LocalContext localContext) throws RuleBaseException;
 
 }

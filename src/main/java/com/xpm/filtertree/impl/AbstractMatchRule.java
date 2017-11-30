@@ -1,10 +1,10 @@
 package com.xpm.filtertree.impl;
 
 import com.google.common.collect.Lists;
-import com.xpm.filtertree.Filter;
+import com.xpm.filtertree.Rule;
 import com.xpm.filtertree.context.GlobalContext;
 import com.xpm.filtertree.context.LocalContext;
-import com.xpm.filtertree.exception.FilterBaseException;
+import com.xpm.filtertree.exception.RuleBaseException;
 import com.xpm.filtertree.exception.HaltException;
 
 import java.util.List;
@@ -13,14 +13,14 @@ import java.util.List;
  * Created by xupingmao on 2017/3/28.
  * 匹配过滤器
  */
-public abstract class AbstractMatchFilter extends AbstractFilter {
+public abstract class AbstractMatchRule extends AbstractRule {
 
     enum MatchType {
         ANY, ALL
     }
 
     private String name = null;
-    protected List<Filter> filterList = Lists.newArrayList();
+    protected List<Rule> ruleList = Lists.newArrayList();
 
     @Override
     public boolean hasChildren() {
@@ -28,8 +28,8 @@ public abstract class AbstractMatchFilter extends AbstractFilter {
     }
 
     @Override
-    public List<Filter> getChildren() {
-        return filterList;
+    public List<Rule> getChildren() {
+        return ruleList;
     }
 
     @Override
@@ -41,24 +41,24 @@ public abstract class AbstractMatchFilter extends AbstractFilter {
         this.name = name;
     }
 
-    public void setFilterList(List<Filter> filterList) {
-        this.filterList = filterList;
+    public void setRuleList(List<Rule> ruleList) {
+        this.ruleList = ruleList;
         // 检测循环依赖
     }
 
-    public void setFilterList(Filter...filters) {
-        this.filterList = Lists.newArrayList(filters);
+    public void setFilterList(Rule... rules) {
+        this.ruleList = Lists.newArrayList(rules);
         // 检测循环依赖
     }
 
-    public List<Filter> getFilterList() {
-        return filterList;
+    public List<Rule> getRuleList() {
+        return ruleList;
     }
 
-    private String getFilterName(Filter filter) {
-        String name = filter.getName();
+    private String getFilterName(Rule rule) {
+        String name = rule.getName();
         if (name == null) {
-            return filter.getClass().getSimpleName();
+            return rule.getClass().getSimpleName();
         }
         return name;
     }
@@ -66,34 +66,34 @@ public abstract class AbstractMatchFilter extends AbstractFilter {
     public abstract MatchType getMatchType();
 
     @Override
-    public void doFilter(GlobalContext globalContext, LocalContext parentContext) throws FilterBaseException {
+    public void execute(GlobalContext globalContext, LocalContext parentContext) throws RuleBaseException {
         // 初始化prevResult
         LocalContext lastResult = parentContext;
-        FilterBaseException exception = null;
+        RuleBaseException exception = null;
 
         if (globalContext.isDebug()) {
             globalContext.enterScope();
         }
 
-        for (Filter filter : filterList) {
+        for (Rule rule : ruleList) {
             // 处理临时变量localParam
             // 把上层的处理结果放入localParam供下一个filter使用
             // 比如搜索引擎，每次build可以先尝试从localParam中取builder,最后一个filter负责查询
             // 或关系属于开辟新上下文重试，相当于放弃前一个filter的结果
             LocalContext newLocal = new LocalContext();
             newLocal.setPrevResult(lastResult);
-            newLocal.setName(filter.getName());
+            newLocal.setName(rule.getName());
 
             // 调试
             if (globalContext.isDebug()) {
-                globalContext.logFilter(filter);
-                globalContext.log("<", getFilterName(filter), ">");
+                globalContext.logFilter(rule);
+                globalContext.log("<", getFilterName(rule), ">");
                 globalContext.log("  prevChain:", newLocal.getFilterNameChain());
             }
 
             long startTimeMs = System.currentTimeMillis();
             try {
-                filter.doFilter(globalContext, newLocal);
+                rule.execute(globalContext, newLocal);
                 // 执行子filter
                 // 执行结果
                 long costTimeMs = System.currentTimeMillis() - startTimeMs;
@@ -104,7 +104,7 @@ public abstract class AbstractMatchFilter extends AbstractFilter {
             } catch (HaltException ex) {
                 exception = ex;
                 break;
-            } catch (FilterBaseException ex) {
+            } catch (RuleBaseException ex) {
                 if (getMatchType() == MatchType.ALL) {
                     lastResult = parentContext;
                 } else {
@@ -113,7 +113,7 @@ public abstract class AbstractMatchFilter extends AbstractFilter {
                 }
             } finally {
                 if (globalContext.isDebug()) {
-                    globalContext.log("</" + getFilterName(filter), ">");
+                    globalContext.log("</" + getFilterName(rule), ">");
                 }
             }
         }
@@ -129,16 +129,16 @@ public abstract class AbstractMatchFilter extends AbstractFilter {
     @Override
     public String toString() {
 //        String baseName = super.toString();
-        if (filterList == null) {
+        if (ruleList == null) {
             return "[]";
         }
         StringBuilder sb = new StringBuilder();
         sb.append(getName());
         sb.append("[");
-        for (int i = 0; i < filterList.size(); i++) {
-            Filter filter = filterList.get(i);
-            sb.append(filter.toString());
-            if (i != filterList.size()-1) {
+        for (int i = 0; i < ruleList.size(); i++) {
+            Rule rule = ruleList.get(i);
+            sb.append(rule.toString());
+            if (i != ruleList.size()-1) {
                 sb.append(",");
             }
         }

@@ -1,11 +1,12 @@
 package com.xpm.filtertree.test;
 
-import com.xpm.filtertree.Filter;
+import com.xpm.filtertree.Rule;
 import com.xpm.filtertree.context.GlobalContext;
 import com.xpm.filtertree.context.LocalContext;
-import com.xpm.filtertree.exception.FilterBaseException;
-import com.xpm.filtertree.impl.MatchAllFilter;
-import com.xpm.filtertree.impl.MatchAnyFilter;
+import com.xpm.filtertree.exception.RuleBaseException;
+import com.xpm.filtertree.exception.HaltException;
+import com.xpm.filtertree.impl.MatchAllRule;
+import com.xpm.filtertree.impl.MatchAnyRule;
 import org.junit.Test;
 
 /**
@@ -13,33 +14,33 @@ import org.junit.Test;
  */
 public class MainTest {
 
-    private PrintHelloFilter printHelloFilter = new PrintHelloFilter();
-    private StopFilter stopFilter = new StopFilter();
-    private HaltFilter haltFilter = new HaltFilter();
+    private PrintHelloRule printHelloFilter = new PrintHelloRule();
+    private StopRule stopFilter = new StopRule();
+    private HaltRule haltFilter = new HaltRule();
 
     @Test
-    public void matchAny() throws FilterBaseException {
-        Filter anyFilterChain = new MatchAnyFilter(printHelloFilter, stopFilter, haltFilter);
+    public void matchAny() throws RuleBaseException {
+        Rule anyRuleChain = new MatchAnyRule(printHelloFilter, stopFilter, haltFilter);
         GlobalContext globalContext = new GlobalContext();
         globalContext.setDebug(true);
 
         try {
             LocalContext localContext = new LocalContext();
-            anyFilterChain.doFilter(globalContext, localContext);
+            anyRuleChain.execute(globalContext, localContext);
         } finally {
             System.out.println(globalContext.getLogMsg());
         }
     }
 
-    @Test
-    public void matchAll() throws FilterBaseException {
+    @Test(expected = HaltException.class)
+    public void matchAll_halt() throws RuleBaseException {
         GlobalContext globalContext = new GlobalContext();
         globalContext.setDebug(true);
 
         LocalContext localContext = new LocalContext();
         try {
-            Filter allFilterChain = new MatchAllFilter(printHelloFilter, stopFilter, haltFilter);
-            allFilterChain.doFilter(globalContext, localContext);
+            Rule allRuleChain = new MatchAllRule(printHelloFilter, stopFilter, haltFilter);
+            allRuleChain.execute(globalContext, localContext);
         } finally {
             System.out.println(globalContext.getLogMsg());
         }

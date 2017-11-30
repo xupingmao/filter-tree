@@ -1,7 +1,7 @@
 package com.xpm.filtertree.context;
 
 import com.google.common.collect.Lists;
-import com.xpm.filtertree.Filter;
+import com.xpm.filtertree.Rule;
 
 import java.util.List;
 
@@ -11,23 +11,14 @@ import java.util.List;
 public class GlobalContext {
     private String caseId;
     // 全局的实体可以放在这里
-    private int max;
-
     // 用于调试测试
     private boolean debug = false;
     private int indent = -2;
-    private List<Filter> executedFilters = null;
-    // 扫荡者，过滤了所有输入
-    private List<String> cleanerList = Lists.newArrayList();
+    private List<Rule> executedRules = null;
+
+    private List<LocalContext> localStack = Lists.newArrayList();
+
     private StringBuilder logMsgBuilder;
-
-    public void setMax(int max) {
-        this.max = max;
-    }
-
-    public int getMax() {
-        return max;
-    }
 
     // 调试方法
     public boolean isDebug() {
@@ -85,36 +76,28 @@ public class GlobalContext {
         }
     }
 
-    public void logFilter(Filter filter) {
-        if (executedFilters == null) {
-            executedFilters = Lists.newArrayList();
+    public void logFilter(Rule rule) {
+        if (executedRules == null) {
+            executedRules = Lists.newArrayList();
         }
-        executedFilters.add(filter);
+        executedRules.add(rule);
     }
 
-    public List<Filter> getExecutedFilters() {
-        return executedFilters;
+    public List<Rule> getExecutedRules() {
+        return executedRules;
     }
 
     public String getExecutedFiltersInfo() {
-        if (executedFilters == null) {
+        if (executedRules == null) {
             return null;
         }
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        for (Filter filter: executedFilters) {
-            sb.append(filter.getName());
+        for (Rule rule : executedRules) {
+            sb.append(rule.getName());
             sb.append(",");
         }
         sb.append("]");
         return sb.toString();
-    }
-
-    public void logCleaner(String name) {
-        cleanerList.add(name);
-    }
-
-    public List<String> getCleanerList() {
-        return cleanerList;
     }
 }

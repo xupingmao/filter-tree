@@ -1,19 +1,19 @@
 package com.xpm.filtertree.impl;
 
-import com.xpm.filtertree.Filter;
+import com.xpm.filtertree.Rule;
 
 /**
  * Created by xupingmao on 2017/3/28.
  * 处理树的水平移动,失败之后退出
  */
-public class MatchAllFilter extends AbstractMatchFilter {
+public class MatchAllRule extends AbstractMatchRule {
 
-    public MatchAllFilter() {
+    public MatchAllRule() {
 
     }
 
-    public MatchAllFilter(Filter... filters) {
-        super.setFilterList(filters);
+    public MatchAllRule(Rule... rules) {
+        super.setFilterList(rules);
     }
 
     @Override
@@ -23,17 +23,16 @@ public class MatchAllFilter extends AbstractMatchFilter {
 
     @Override
     public String toString() {
-//        String baseName = super.toString();
-        if (filterList == null) {
+        if (ruleList == null) {
             return "()";
         }
         StringBuilder sb = new StringBuilder();
         sb.append(getName());
         sb.append("(");
-        for (int i = 0; i < filterList.size(); i++) {
-            Filter filter = filterList.get(i);
-            sb.append(filter.toString());
-            if (i != filterList.size()-1) {
+        for (int i = 0; i < ruleList.size(); i++) {
+            Rule rule = ruleList.get(i);
+            sb.append(rule.toString());
+            if (i != ruleList.size()-1) {
                 sb.append(" ");
             }
         }

@@ -1,9 +1,7 @@
 package com.xpm.filtertree.impl;
 
 import com.google.common.collect.Lists;
-import com.xpm.filtertree.Filter;
-import com.xpm.filtertree.impl.MatchAllFilter;
-import com.xpm.filtertree.impl.MatchAnyFilter;
+import com.xpm.filtertree.Rule;
 
 import java.util.List;
 
@@ -44,40 +42,40 @@ public class FilterPermutationBuilder {
      *    F3 = A2 B1
      *    F4 = A2 B2
      *
-     * @param filters
+     * @param rules
      * @return
      */
-    public MatchAnyFilter buildParallels(List<Filter> filters) {
-        MatchAnyFilter matchFilter = new MatchAnyFilter();
+    public MatchAnyRule buildParallels(List<Rule> rules) {
+        MatchAnyRule matchFilter = new MatchAnyRule();
         matchFilter.setName(rootName);
-        List<MatchAllFilter> matchAllFilters = buildParallels0(filters, 0);
+        List<MatchAllRule> matchAllFilters = buildParallels0(rules, 0);
         matchFilter.getChildren().addAll(matchAllFilters);
         return matchFilter;
     }
 
-    private List<MatchAllFilter> buildParallels0(List<Filter> filters, int start) {
-        if (start == filters.size()) {
+    private List<MatchAllRule> buildParallels0(List<Rule> rules, int start) {
+        if (start == rules.size()) {
             // 终止条件
             // 最终结果数量和终止条件数量一致，所以在此处创建对象
-            MatchAllFilter matchAll = new MatchAllFilter();
+            MatchAllRule matchAll = new MatchAllRule();
             matchAll.setName(matchAllName);
             return Lists.newArrayList(matchAll);
         } else {
-            Filter current = filters.get(start);
-            List<MatchAllFilter> allFilters = Lists.newArrayList();
+            Rule current = rules.get(start);
+            List<MatchAllRule> allFilters = Lists.newArrayList();
 
-            if (current instanceof MatchAnyFilter) {
+            if (current instanceof MatchAnyRule) {
                 // 只处理Any的全排列
-                for (Filter choice: current.getChildren()) {
-                    List<MatchAllFilter> matchAllFilters = buildParallels0(filters, start + 1);
-                    for (MatchAllFilter maf: matchAllFilters) {
+                for (Rule choice: current.getChildren()) {
+                    List<MatchAllRule> matchAllFilters = buildParallels0(rules, start + 1);
+                    for (MatchAllRule maf: matchAllFilters) {
                         maf.getChildren().add(0, choice);
                     }
                     allFilters.addAll(matchAllFilters);
                 }
             } else {
-                allFilters = buildParallels0(filters, start+1);
-                for (MatchAllFilter maf: allFilters) {
+                allFilters = buildParallels0(rules, start+1);
+                for (MatchAllRule maf: allFilters) {
                     maf.getChildren().add(0, current);
                 }
             }
@@ -97,13 +95,13 @@ public class FilterPermutationBuilder {
      *      Step3. R =  A1 (B1 C | B2 C)
      *                  A2 (B1 C | B2 C)
      *
-     * @param filters
+     * @param rules
      * @return
      */
-    public Filter buildTree(List<Filter> filters) {
-        MatchAnyFilter rootFilter = new MatchAnyFilter();
+    public Rule buildTree(List<Rule> rules) {
+        MatchAnyRule rootFilter = new MatchAnyRule();
         rootFilter.setName(matchAnyName);
-        buildTree0(rootFilter, filters, 0);
+        buildTree0(rootFilter, rules, 0);
         // 第一个分支是filters[0]
         // 1. 第一个分支是All
         // 2. 第一个分支是Any
@@ -112,27 +110,27 @@ public class FilterPermutationBuilder {
         return rootFilter.getChildren().get(0);
     }
 
-    private void buildTree0(Filter parentFilter, List<Filter> filters, int start) {
-        if (start >= filters.size()) {
+    private void buildTree0(Rule parentRule, List<Rule> rules, int start) {
+        if (start >= rules.size()) {
             return;
         }
-        Filter choice = filters.get(start);
+        Rule choice = rules.get(start);
 //        System.out.println(start+":" + choice);
-        if (choice instanceof MatchAnyFilter) {
+        if (choice instanceof MatchAnyRule) {
             // 展开可能的分支
-            MatchAnyFilter anyFilter = new MatchAnyFilter();
+            MatchAnyRule anyFilter = new MatchAnyRule();
             if (start == 0) {
                 // 目标树的名称
                 anyFilter.setName(rootName);
             } else {
                 anyFilter.setName(matchAnyName);
             }
-            for (Filter subChoice : choice.getChildren()) {
+            for (Rule subChoice : choice.getChildren()) {
                 // 构建子树
-                MatchAllFilter matchAllFilter = new MatchAllFilter();
+                MatchAllRule matchAllFilter = new MatchAllRule();
                 matchAllFilter.setName(matchAllName);
                 matchAllFilter.getChildren().add(subChoice);
-                buildTree0(matchAllFilter, filters, start+1);
+                buildTree0(matchAllFilter, rules, start+1);
                 // 优化只有一个子节点的matchAll
                 if (matchAllFilter.getChildren().size() == 1) {
                     anyFilter.getChildren().add(subChoice);
@@ -140,10 +138,10 @@ public class FilterPermutationBuilder {
                     anyFilter.getChildren().add(matchAllFilter);
                 }
             }
-            parentFilter.getChildren().add(anyFilter);
+            parentRule.getChildren().add(anyFilter);
         } else {
-            parentFilter.getChildren().add(choice);
-            buildTree0(parentFilter, filters, start+1);
+            parentRule.getChildren().add(choice);
+            buildTree0(parentRule, rules, start+1);
         }
     }
 
