@@ -1,2 +1,2 @@
-# filter-tree
-filter tree for java
+# rule-tree
+rule tree for java

@@ -1,4 +1,4 @@
-package com.xpm.filtertree.impl;
+package com.xpm.rules.controller;
 
 /**
  * Created by xupingmao on 2017/11/30.

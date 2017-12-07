@@ -1,4 +1,4 @@
-package com.xpm.filtertree.exception;
+package com.xpm.rules.exception;
 
 /**
  * Created by xupingmao on 2017/7/28.
