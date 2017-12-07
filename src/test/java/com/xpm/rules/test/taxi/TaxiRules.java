@@ -1,6 +1,7 @@
 package com.xpm.rules.test.taxi;
 
-import com.xpm.rules.controller.LinearRuleEngine;
+import com.xpm.rules.RuleEngine;
+import com.xpm.rules.engine.LinearRuleEngine;
 import org.junit.Test;
 
 import java.util.Date;
@@ -12,7 +13,7 @@ public class TaxiRules {
 
     @Test
     public void charge() {
-        LinearRuleEngine ruleEngine = new LinearRuleEngine();
+        RuleEngine ruleEngine = new LinearRuleEngine();
 
         ruleEngine.addRule(new DayRule());
         ruleEngine.addRule(new NightStartingRule());

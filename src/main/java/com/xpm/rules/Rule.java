@@ -21,7 +21,7 @@ public interface Rule<T> {
     boolean match(T globalContext);
 
     /**
-     * 规则的操作，后件
+     * 规则的操作，后件，如果执行失败，抛出异常
      * @param globalContext 全局上下文
      * @return
      */

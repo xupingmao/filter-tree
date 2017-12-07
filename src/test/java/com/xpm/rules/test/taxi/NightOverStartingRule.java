@@ -1,7 +1,7 @@
 package com.xpm.rules.test.taxi;
 
 import com.xpm.rules.RuleEngine;
-import com.xpm.rules.impl.AbstractRule;
+import com.xpm.rules.AbstractRule;
 
 import java.math.BigDecimal;
 

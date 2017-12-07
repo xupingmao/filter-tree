@@ -1,7 +1,7 @@
 package com.xpm.rules.test;
 
 import com.xpm.rules.RuleEngine;
-import com.xpm.rules.impl.AbstractRule;
+import com.xpm.rules.AbstractRule;
 
 /**
  * Created by xupingmao on 2017/7/28.

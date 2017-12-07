@@ -1,4 +1,4 @@
-package com.xpm.rules.impl;
+package com.xpm.rules;
 
 import com.xpm.rules.Rule;
 
@@ -12,7 +12,10 @@ public abstract class AbstractRule<T> implements Rule<T> {
 
     @Override
     public String getName() {
-        return name;
+        if (name != null) {
+            return name;
+        }
+        return getClass().getSimpleName();
     }
 
     @Override

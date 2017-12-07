@@ -1,6 +1,6 @@
 package com.xpm.rules.test;
 
-import com.xpm.rules.controller.LinearRuleEngine;
+import com.xpm.rules.engine.LinearRuleEngine;
 import org.junit.Test;
 
 /**
