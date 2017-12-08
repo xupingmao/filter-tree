@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class SumRule extends AbstractRule<TaxiInfo> {
 
     @Override
-    public boolean match(TaxiInfo globalContext) {
+    public boolean match(RuleEngine engine, TaxiInfo globalContext) {
         return true;
     }
 

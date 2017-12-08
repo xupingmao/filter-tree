@@ -9,7 +9,7 @@ import com.xpm.rules.AbstractRule;
 public class StopRule extends AbstractRule<Void> {
 
     @Override
-    public boolean match(Void globalContext) {
+    public boolean match(RuleEngine engine, Void globalContext) {
         return true;
     }
 

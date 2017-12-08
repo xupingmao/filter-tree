@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  */
 public class NightOverStartingRule extends AbstractRule<TaxiInfo> {
     @Override
-    public boolean match(TaxiInfo globalContext) {
+    public boolean match(RuleEngine engine, TaxiInfo globalContext) {
         int hours = globalContext.getStartTime().getHours();
         return (hours >= 21 || hours < 6) && globalContext.getDistance() > 3;
     }

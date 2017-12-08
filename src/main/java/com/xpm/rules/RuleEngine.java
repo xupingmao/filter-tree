@@ -5,7 +5,7 @@ package com.xpm.rules;
  */
 public interface RuleEngine {
 
-    Object execute(Object params);
+    void execute(Object context);
 
     void addRule(Rule rule);
 

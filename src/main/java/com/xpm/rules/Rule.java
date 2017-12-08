@@ -15,16 +15,16 @@ public interface Rule<T> {
     /**
      * 规则的条件，也就是前件
      * 抽离出来可以让控制机构生成路由
-     * @param globalContext
+     * @param param
      * @return
      */
-    boolean match(T globalContext);
+    boolean match(RuleEngine ruleEngine, T param);
 
     /**
      * 规则的操作，后件，如果执行失败，抛出异常
-     * @param globalContext 全局上下文
+     * @param param 全局上下文
      * @return
      */
-    void execute(RuleEngine ruleEngine, T globalContext);
+    void execute(RuleEngine ruleEngine, T param);
 
 }

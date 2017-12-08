@@ -9,7 +9,7 @@ import com.xpm.rules.AbstractRule;
 public class DayRule extends AbstractRule<TaxiInfo> {
 
     @Override
-    public boolean match(TaxiInfo globalContext) {
+    public boolean match(RuleEngine engine, TaxiInfo globalContext) {
         int hours = globalContext.getStartTime().getHours();
         return hours >= 6 && hours < 21;
     }
