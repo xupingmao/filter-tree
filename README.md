@@ -1,2 +1,2 @@
-# rule-tree
-rule tree for java
+# rules
+rules engine for java

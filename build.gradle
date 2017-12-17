@@ -18,7 +18,7 @@ repositories {
     jcenter()
 }
 
-group = 'filter-tree'
+group = 'rules'
 version = '1.0.0'
 sourceCompatibility = 1.6
 
