@@ -9,8 +9,8 @@ import org.junit.Test;
  */
 public class QueenTest {
 
-    public void addNonDeterministicVar(LinearRuleEngine ruleEngine, String varName) {
-        ruleEngine.addNonDeterministicVar(varName, 0,1,2,3,4,5,6,7);
+    public void addPermutationVar(LinearRuleEngine ruleEngine, String varName) {
+        ruleEngine.addPermutationVar(varName, 0,1,2,3);
     }
 
     @Test
@@ -19,14 +19,14 @@ public class QueenTest {
 
         ruleEngine.addRule(new QueenRule());
 
-        addNonDeterministicVar(ruleEngine, "x1");
-        addNonDeterministicVar(ruleEngine, "x2");
-        addNonDeterministicVar(ruleEngine, "x3");
-        addNonDeterministicVar(ruleEngine, "x4");
-        addNonDeterministicVar(ruleEngine, "y1");
-        addNonDeterministicVar(ruleEngine, "y2");
-        addNonDeterministicVar(ruleEngine, "y3");
-        addNonDeterministicVar(ruleEngine, "y4");
+        addPermutationVar(ruleEngine, "x1");
+        addPermutationVar(ruleEngine, "x2");
+        addPermutationVar(ruleEngine, "x3");
+        addPermutationVar(ruleEngine, "y1");
+        addPermutationVar(ruleEngine, "y2");
+        addPermutationVar(ruleEngine, "y3");
+        addPermutationVar(ruleEngine, "x4");
+        addPermutationVar(ruleEngine, "y4");
 
         ruleEngine.setLogProfile(false);
         ruleEngine.execute(null);

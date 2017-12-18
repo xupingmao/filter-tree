@@ -7,15 +7,15 @@ import java.util.List;
 /**
  * Created by xupingmao on 2017/12/7.
  */
-public class NonDeterministicVar implements Iterator {
+public class PermutationVar implements Iterator {
 
     private List<Object> values;
     private int nextIndex;
     private int maxIndex;
     private Object current;
-    private NonDeterministicVar parent;
+    private PermutationVar parent;
 
-    public NonDeterministicVar(NonDeterministicVar parent, Object... vars) {
+    public PermutationVar(PermutationVar parent, Object... vars) {
         this.parent = parent;
         values = Arrays.asList(vars);
         maxIndex = values.size();

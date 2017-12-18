@@ -21,11 +21,17 @@ public class LinearRuleEngine implements RuleEngine {
     /** 是否提前接受决策结果 */
     private boolean accepted = false;
 
-    private Map<String, NonDeterministicVar> nonDeterministicVars = new HashMap<String, NonDeterministicVar>();
-    private NonDeterministicVar last = null;
+    /**
+     * 全排列变量
+     */
+    private Map<String, PermutationVar> permutationVars = new HashMap<String, PermutationVar>();
+    private PermutationVar last = null;
+
+    /**
+     * TODO 组合变量
+     */
 
     public LinearRuleEngine() {
-
     }
 
     @Override
@@ -42,21 +48,21 @@ public class LinearRuleEngine implements RuleEngine {
         rules.add(rule);
     }
 
-    public void addNonDeterministicVar(String key, Object... values) {
-        last = new NonDeterministicVar(last, values);
-        nonDeterministicVars.put(key, last);
+    public void addPermutationVar(String key, Object... values) {
+        last = new PermutationVar(last, values);
+        permutationVars.put(key, last);
     }
 
     @Override
     public void execute(Object params) {
-        if (nonDeterministicVars.isEmpty()) {
+        if (permutationVars.isEmpty()) {
             execute0(params);
         } else {
             // 实现非确定性计算
             // TODO 考虑使用并行加速
-            // TODO 提前把value set进params
             while (last.hasNext()) {
                 last.next();
+                // TODO 提前把value set进params，避免使用规则引擎的get来查找
                 execute0(params);
             }
         }
@@ -82,7 +88,7 @@ public class LinearRuleEngine implements RuleEngine {
 
     @Override
     public <V> V get(String key, Class<V> clazz) {
-        return (V) nonDeterministicVars.get(key).getCurrent();
+        return (V) permutationVars.get(key).getCurrent();
     }
 
     @Override
