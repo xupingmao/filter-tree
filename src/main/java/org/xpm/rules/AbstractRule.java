@@ -29,3 +29,4 @@ public abstract class AbstractRule<T> implements Rule<T> {
         return getName();
     }
 }
+
