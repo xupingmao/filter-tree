@@ -53,6 +53,7 @@ public class LinearRuleEngine implements RuleEngine {
             execute0(params);
         } else {
             // 实现非确定性计算
+            // TODO 考虑使用并行加速
             // TODO 提前把value set进params
             while (last.hasNext()) {
                 last.next();
