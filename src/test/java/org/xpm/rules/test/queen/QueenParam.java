@@ -3,7 +3,7 @@ package org.xpm.rules.test.queen;
 /**
  * Created by xupingmao on 2017/12/18.
  */
-public class QueueParam {
+public class QueenParam {
     private Integer x1;
     private Integer y1;
     private Integer x2;

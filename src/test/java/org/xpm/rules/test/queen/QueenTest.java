@@ -29,7 +29,7 @@ public class QueenTest {
         addPermutationVar(ruleEngine, "y4");
 
         ruleEngine.setLogProfile(false);
-        ruleEngine.execute(null);
+        ruleEngine.execute(new QueenParam());
     }
 
 }

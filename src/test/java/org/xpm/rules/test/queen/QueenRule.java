@@ -8,22 +8,22 @@ import java.util.HashSet;
 /**
  * Created by xupingmao on 2017/12/8.
  */
-public class QueenRule extends AbstractRule<Void> {
+public class QueenRule extends AbstractRule<QueenParam> {
 
     private int counter = 0;
 
     @Override
-    public boolean match(RuleEngine ruleEngine, Void globalContext) {
+    public boolean match(RuleEngine ruleEngine, QueenParam globalContext) {
         return true;
     }
 
     @Override
-    public void execute(RuleEngine ruleEngine, Void globalContext) {
+    public void execute(RuleEngine ruleEngine, QueenParam globalContext) {
         counter++;
-        Integer x1 = ruleEngine.get("x1", Integer.class);
-        Integer y1 = ruleEngine.get("y1", Integer.class);
-        Integer x2 = ruleEngine.get("x2", Integer.class);
-        Integer y2 = ruleEngine.get("y2", Integer.class);
+        Integer x1 = globalContext.getX1();
+        Integer y1 = globalContext.getY1();
+        Integer x2 = globalContext.getX2();
+        Integer y2 = globalContext.getY2();
         Integer x3 = ruleEngine.get("x3", Integer.class);
         Integer y3 = ruleEngine.get("y3", Integer.class);
         Integer x4 = ruleEngine.get("x4", Integer.class);

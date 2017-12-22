@@ -27,4 +27,9 @@ public interface RuleEngine {
      */
     void update(String key, Object value);
 
+    /**
+     * 重新规划执行器
+     */
+    void replan();
+
 }

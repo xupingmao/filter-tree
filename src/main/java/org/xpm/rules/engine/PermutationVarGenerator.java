@@ -5,17 +5,19 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * 全排列参数生成器
  * Created by xupingmao on 2017/12/7.
  */
-public class PermutationVar implements Iterator {
+public class PermutationVarGenerator implements Iterator {
 
+    private String name;
     private List<Object> values;
     private int nextIndex;
     private int maxIndex;
     private Object current;
-    private PermutationVar parent;
+    private PermutationVarGenerator parent;
 
-    public PermutationVar(PermutationVar parent, Object... vars) {
+    public PermutationVarGenerator(PermutationVarGenerator parent, Object... vars) {
         this.parent = parent;
         values = Arrays.asList(vars);
         maxIndex = values.size();
@@ -64,10 +66,22 @@ public class PermutationVar implements Iterator {
 
     @Override
     public void remove() {
-
+        throw new UnsupportedOperationException();
     }
 
     public Object getCurrent() {
         return current;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public PermutationVarGenerator getParent() {
+        return parent;
     }
 }

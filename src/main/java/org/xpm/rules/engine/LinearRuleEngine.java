@@ -3,7 +3,10 @@ package org.xpm.rules.engine;
 import com.google.common.collect.Lists;
 import org.xpm.rules.Rule;
 import org.xpm.rules.RuleEngine;
+import org.xpm.rules.utils.RuleUtils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +27,8 @@ public class LinearRuleEngine implements RuleEngine {
     /**
      * 全排列变量
      */
-    private Map<String, PermutationVar> permutationVars = new HashMap<String, PermutationVar>();
-    private PermutationVar last = null;
+    private Map<String, PermutationVarGenerator> permutationVars = new HashMap<String, PermutationVarGenerator>();
+    private PermutationVarGenerator last = null;
 
     /**
      * TODO 组合变量
@@ -49,7 +52,8 @@ public class LinearRuleEngine implements RuleEngine {
     }
 
     public void addPermutationVar(String key, Object... values) {
-        last = new PermutationVar(last, values);
+        last = new PermutationVarGenerator(last, values);
+        last.setName(key);
         permutationVars.put(key, last);
     }
 
@@ -62,14 +66,39 @@ public class LinearRuleEngine implements RuleEngine {
             // TODO 考虑使用并行加速
             while (last.hasNext()) {
                 last.next();
-                // TODO 提前把value set进params，避免使用规则引擎的get来查找
+                // 提前把value set进params，避免使用规则引擎的get来查找
+                setProperties(params, last);
                 execute0(params);
             }
         }
     }
 
+    private void setProperties(Object params, PermutationVarGenerator permutationVars) {
+        if (params == null) {
+            return;
+        }
+        while (permutationVars != null) {
+            try {
+                Object value = permutationVars.getCurrent();
+                if (value != null) {
+                    String methodName = RuleUtils.getSetMethodName(permutationVars.getName());
+                    Method method = params.getClass().getMethod(methodName, value.getClass());
+                    method.invoke(params, value);
+                }
+            } catch (NoSuchMethodException e) {
+                // do Nothing
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            permutationVars = permutationVars.getParent();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public void execute0(Object context) {
+        // TODO 先计算出规则链再执行
         for (Rule rule: rules) {
             if (rule.match(this, context)) {
                 long startTime = System.currentTimeMillis();
@@ -93,6 +122,11 @@ public class LinearRuleEngine implements RuleEngine {
 
     @Override
     public void update(String key, Object value) {
+        // TODO 更新全局上下文
+    }
 
+    @Override
+    public void replan() {
+        // TODO 重新生成规则链执行
     }
 }
