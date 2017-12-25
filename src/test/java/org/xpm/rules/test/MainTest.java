@@ -1,5 +1,6 @@
 package org.xpm.rules.test;
 
+import org.xpm.rules.RuleContext;
 import org.xpm.rules.engine.LinearRuleEngine;
 import org.junit.Test;
 
@@ -15,6 +16,6 @@ public class MainTest {
         engine.addRule(new PrintHelloRule());
         engine.addRule(new HaltRule());
 
-        engine.execute(null);
+        engine.execute(new RuleContext());
     }
 }

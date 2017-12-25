@@ -11,12 +11,12 @@ import java.math.BigDecimal;
 public class SumRule extends AbstractRule<TaxiInfo> {
 
     @Override
-    public boolean match(RuleEngine engine, TaxiInfo globalContext) {
+    public boolean match(TaxiInfo globalContext) {
         return true;
     }
 
     @Override
-    public void execute(RuleEngine ruleEngine, TaxiInfo globalContext) {
+    public void execute(TaxiInfo globalContext) {
         BigDecimal totalPrice = globalContext.getStartingPrice().add(globalContext.getOverPrice());
         System.out.println("出租车总价：" + totalPrice);
     }
