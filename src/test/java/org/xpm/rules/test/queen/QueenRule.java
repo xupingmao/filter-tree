@@ -13,21 +13,21 @@ public class QueenRule extends AbstractRule<QueenParam> {
     private int counter = 0;
 
     @Override
-    public boolean match(RuleEngine ruleEngine, QueenParam globalContext) {
+    public boolean match(QueenParam globalContext) {
         return true;
     }
 
     @Override
-    public void execute(RuleEngine ruleEngine, QueenParam globalContext) {
+    public void execute(QueenParam globalContext) {
         counter++;
         Integer x1 = globalContext.getX1();
         Integer y1 = globalContext.getY1();
         Integer x2 = globalContext.getX2();
         Integer y2 = globalContext.getY2();
-        Integer x3 = ruleEngine.get("x3", Integer.class);
-        Integer y3 = ruleEngine.get("y3", Integer.class);
-        Integer x4 = ruleEngine.get("x4", Integer.class);
-        Integer y4 = ruleEngine.get("y4", Integer.class);
+        Integer x3 = globalContext.getX3();
+        Integer y3 = globalContext.getY3();
+        Integer x4 = globalContext.getX4();
+        Integer y4 = globalContext.getY4();
 
         // 坐标不能相同
         if (notDistinct(x1,x2,x3, x4)) {

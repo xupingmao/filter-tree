@@ -1,12 +1,14 @@
 package org.xpm.rules.test.taxi;
 
+import org.xpm.rules.RuleContext;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * Created by xupingmao on 2017/11/30.
  */
-public class TaxiInfo {
+public class TaxiInfo extends RuleContext {
 
     private Date startTime;
 

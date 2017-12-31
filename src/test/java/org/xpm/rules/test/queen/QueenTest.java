@@ -16,9 +16,7 @@ public class QueenTest {
     @Test
     public void queen() {
         LinearRuleEngine ruleEngine = new LinearRuleEngine();
-
         ruleEngine.addRule(new QueenRule());
-
         addPermutationVar(ruleEngine, "x1");
         addPermutationVar(ruleEngine, "x2");
         addPermutationVar(ruleEngine, "x3");
@@ -27,8 +25,8 @@ public class QueenTest {
         addPermutationVar(ruleEngine, "y3");
         addPermutationVar(ruleEngine, "x4");
         addPermutationVar(ruleEngine, "y4");
-
         ruleEngine.setLogProfile(false);
+
         ruleEngine.execute(new QueenParam());
     }
 

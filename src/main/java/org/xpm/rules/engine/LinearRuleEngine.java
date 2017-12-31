@@ -2,6 +2,7 @@ package org.xpm.rules.engine;
 
 import com.google.common.collect.Lists;
 import org.xpm.rules.Rule;
+import org.xpm.rules.RuleContext;
 import org.xpm.rules.RuleEngine;
 import org.xpm.rules.utils.RuleUtils;
 
@@ -58,7 +59,7 @@ public class LinearRuleEngine implements RuleEngine {
     }
 
     @Override
-    public void execute(Object params) {
+    public void execute(RuleContext params) {
         if (permutationVars.isEmpty()) {
             execute0(params);
         } else {
@@ -97,21 +98,33 @@ public class LinearRuleEngine implements RuleEngine {
     }
 
     @SuppressWarnings("unchecked")
-    public void execute0(Object context) {
+    public void execute0(RuleContext context) {
         // TODO 先计算出规则链再执行
-        for (Rule rule: rules) {
-            if (rule.match(this, context)) {
-                long startTime = System.currentTimeMillis();
-                rule.execute(this, context);
-                long costTime = System.currentTimeMillis() - startTime;
-                if (logProfile) {
-                    System.out.println(String.format("执行规则[%s]耗时[%s]ms", rule.getName(), costTime));
-                }
-                if (accepted) {
-                    // 执行成功，终止规则
-                    return;
+        do {
+            context.setNeedRePlan(false);
+            for (Rule rule: rules) {
+                if (rule.match(context)) {
+                    executeRule(context, rule);
+                    if (context.isStopped()) {
+                        // 执行成功，终止规则
+                        return;
+                    }
+                    if (context.isNeedRePlan()) {
+                        // 重新规划线路
+                        break;
+                    }
                 }
             }
+        } while (context.isNeedRePlan());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void executeRule(RuleContext context, Rule rule) {
+        long startTime = System.currentTimeMillis();
+        rule.execute(context);
+        long costTime = System.currentTimeMillis() - startTime;
+        if (logProfile) {
+            System.out.println(String.format("执行规则[%s]耗时[%s]ms", rule.getName(), costTime));
         }
     }
 

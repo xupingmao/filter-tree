@@ -19,6 +19,7 @@ public class TaxiRules {
         ruleEngine.addRule(new NightStartingRule());
         ruleEngine.addRule(new NightOverStartingRule());
         ruleEngine.addRule(new SumRule());
+
         TaxiInfo info = new TaxiInfo();
         info.setStartTime(new Date(2016,10,1,23,0));
         info.setDistance(10);
