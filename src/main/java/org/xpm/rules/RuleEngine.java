@@ -9,8 +9,6 @@ public interface RuleEngine {
 
     void addRule(Rule rule);
 
-    void accept();
-
     /**
      * 获取全局参数
      * @param key
